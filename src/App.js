@@ -7,6 +7,14 @@ import RestaurantListShimmer from "./components/Shimmer/RestaurantListShimmer";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RestaurantDetail from "./components/RestaurantDetail";
 
+const Demo = () => {
+  return (
+    <>
+      <h1>DEMO</h1>
+    </>
+  );
+};
+
 const App = () => {
   return (
     <>

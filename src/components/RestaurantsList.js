@@ -8,7 +8,7 @@ const RestaurantsList = () => {
 
   async function getCarouselData() {
     let data = await fetch(
-      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=23.022505&lng=72.5713621&page_type=DESKTOP_WEB_LISTING"
+      "https://corsanywhere.herokuapp.com/https://www.swiggy.com/dapi/restaurants/list/v5?lat=23.022505&lng=72.5713621&page_type=DESKTOP_WEB_LISTING"
     );
 
     let finalData = await data.json();
@@ -30,7 +30,7 @@ const RestaurantsList = () => {
               to={`/restaurant/${card?.data?.name}/${card?.data?.id}`}
               key={card?.data?.id}
             >
-              <div className="flex box-border tablet:flex-col tablet:h-[300px] tablet:w-[260px] tablet:p-[10px] cursor-pointer hover:shadow-md tablet:hover:border-[1px]">
+              <div className="flex box-border tablet:flex-col tablet:h-[300px] tablet:w-[260px] tablet:p-[10px] cursor-pointer hover:shadow-md border-[1px] border-transparent tablet:hover:border-[1px] tablet:hover:border-black/30">
                 <div className="w-[20%] tablet:w-full tablet:flex tablet:justify-center tablet:items-center">
                   <img
                     alt="hotelImage"

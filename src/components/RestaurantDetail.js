@@ -8,7 +8,7 @@ const RestaurantDetail = () => {
 
   async function getRestaurantData() {
     let data = await fetch(
-      `https://www.swiggy.com/dapi/menu/v4/full?lat=23.022505&lng=72.5713621&menuId=${id}`
+      `https://corsanywhere.herokuapp.com/https://www.swiggy.com/dapi/menu/v4/full?lat=23.022505&lng=72.5713621&menuId=${id}`
     );
 
     let json = await data.json();
@@ -19,7 +19,11 @@ const RestaurantDetail = () => {
   useEffect(() => {
     getRestaurantData();
   }, []);
-  console.log("restaurantData?.menu?.widgets::", restaurantData);
+
+  if (!restaurantData) {
+    return null;
+  }
+
   return (
     <div>
       <div className="laptop:bg-black laptop:py-[20px]">
@@ -176,71 +180,111 @@ const RestaurantDetail = () => {
       </div>
 
       <div className="mx-[4%] my-[2%] tablet:mx-[10%]">
-        {restaurantData?.data?.menu?.widgets?.map((widget) =>
-          widget?.entities?.length > 0 ? (
-            <div key={widget.name}>
-              {widget?.entities?.map((entity) =>
-                restaurantData?.data?.menu?.items?.hasOwnProperty(
-                  entity?.id
-                ) ? (
-                  <div className="font-Poopins">
-                    <div className="flex mb-[2%] py-[10px]">
-                      <div className="flex w-[75%] flex-col gap-y-[10px]">
-                        <div className="w-[85%]">
-                          <p className="font-semibold text-[14px] laptop:text-[17px]">
-                            {
-                              restaurantData?.data?.menu?.items?.[entity?.id]
-                                ?.name
-                            }
-                          </p>
-                          <p className="text-[14px] laptop:text-[17px]">
-                            {"₹ " +
-                              restaurantData?.data?.menu?.items?.[
-                                entity?.id
-                              ]?.price
-                                ?.toString()
-                                .substring(
-                                  0,
-                                  restaurantData?.data?.menu?.items?.[
-                                    entity?.id
-                                  ]?.price?.toString().length - 2
-                                )}
-                          </p>
-                        </div>
-                        <p className="line-clamp-2 w-[85%] text-[14px] laptop:text-[17px] min-h-[40px] max-h-[40px] laptop:max-h-[50px]">
-                          {
-                            restaurantData?.data?.menu?.items?.[entity?.id]
-                              ?.description
-                          }
-                        </p>
-                      </div>
-                      <div className="w-[25%] relative">
-                        <img
-                          alt="menuImage"
-                          src={
-                            IMG_URL +
-                            restaurantData?.data?.menu?.items?.[entity?.id]
-                              ?.cloudinaryImageId
-                          }
-                          className="h-[80px] w-[120px] laptop:w-[150px] laptop:h-[100px] desktop:w-[200px] desktop:h-[120px] object-cover"
-                        />
-                        <button className="bg-white text-green-600 font-semibold px-[15px] py-[4px] border-[1px] shadow-md absolute top-[70%] left-[15%] laptop:top-[80%] laptop:left-[20%]">
-                          ADD
-                        </button>
-                      </div>
-                    </div>
-                    <hr className="h-[7px]" />
-                  </div>
+        {Object.values(restaurantData?.data?.menu?.items).map((item) => (
+          <div className="font-Poopins">
+            <div className="flex mb-[2%] py-[10px]">
+              <div className="flex w-[75%] flex-col gap-y-[10px]">
+                <div className="w-[85%]">
+                  <p className="font-semibold text-[14px] laptop:text-[17px]">
+                    {item?.name}
+                  </p>
+                  <p className="text-[14px] laptop:text-[17px]">
+                    {"₹ " +
+                      item?.price
+                        ?.toString()
+                        .substring(0, item?.price?.toString().length - 2)}
+                  </p>
+                </div>
+                <p className="line-clamp-2 w-[85%] text-[14px] laptop:text-[17px] min-h-[40px] max-h-[40px] laptop:max-h-[50px]">
+                  {item?.description}
+                </p>
+              </div>
+              <div className="w-[25%] relative">
+                {item?.cloudinaryImageId?.length > 0 ? (
+                  <img
+                    alt=""
+                    src={IMG_URL + item?.cloudinaryImageId}
+                    className="h-[80px] w-[120px] laptop:w-[150px] laptop:h-[100px] desktop:w-[200px] desktop:h-[120px] object-cover"
+                  />
                 ) : (
                   ""
-                )
-              )}
-              <hr className="h-[5px]" />
+                )}
+
+                <button className="bg-white text-green-600 font-semibold px-[15px] py-[4px] border-[1px] shadow-md absolute top-[70%] left-[15%] laptop:top-[80%] laptop:left-[20%]">
+                  ADD
+                </button>
+              </div>
             </div>
-          ) : (
-            ""
-          )
-        )}
+            <hr className="h-[7px]" />
+          </div>
+        ))}
+
+        {/* {restaurantData?.data?.menu?.widgets?.map((widget) =>
+          widget?.entities?.length > 0
+            ? (widget?.entities.map((nestedWidget) => (<div></div>)))(
+                <div key={widget.name}>
+                  {widget?.entities?.map((entity) =>
+                    restaurantData?.data?.menu?.items?.hasOwnProperty(
+                      entity?.id
+                    ) ? (
+                      <div className="font-Poopins">
+                        <div className="flex mb-[2%] py-[10px]">
+                          <div className="flex w-[75%] flex-col gap-y-[10px]">
+                            <div className="w-[85%]">
+                              <p className="font-semibold text-[14px] laptop:text-[17px]">
+                                {
+                                  restaurantData?.data?.menu?.items?.[
+                                    entity?.id
+                                  ]?.name
+                                }
+                              </p>
+                              <p className="text-[14px] laptop:text-[17px]">
+                                {"₹ " +
+                                  restaurantData?.data?.menu?.items?.[
+                                    entity?.id
+                                  ]?.price
+                                    ?.toString()
+                                    .substring(
+                                      0,
+                                      restaurantData?.data?.menu?.items?.[
+                                        entity?.id
+                                      ]?.price?.toString().length - 2
+                                    )}
+                              </p>
+                            </div>
+                            <p className="line-clamp-2 w-[85%] text-[14px] laptop:text-[17px] min-h-[40px] max-h-[40px] laptop:max-h-[50px]">
+                              {
+                                restaurantData?.data?.menu?.items?.[entity?.id]
+                                  ?.description
+                              }
+                            </p>
+                          </div>
+                          <div className="w-[25%] relative">
+                            <img
+                              alt="menuImage"
+                              src={
+                                IMG_URL +
+                                restaurantData?.data?.menu?.items?.[entity?.id]
+                                  ?.cloudinaryImageId
+                              }
+                              className="h-[80px] w-[120px] laptop:w-[150px] laptop:h-[100px] desktop:w-[200px] desktop:h-[120px] object-cover"
+                            />
+                            <button className="bg-white text-green-600 font-semibold px-[15px] py-[4px] border-[1px] shadow-md absolute top-[70%] left-[15%] laptop:top-[80%] laptop:left-[20%]">
+                              ADD
+                            </button>
+                          </div>
+                        </div>
+                        <hr className="h-[7px]" />
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  )}
+                  <hr className="h-[5px]" />
+                </div>
+              )
+            : ""
+        )} */}
       </div>
     </div>
   );
